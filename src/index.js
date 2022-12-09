@@ -2,10 +2,12 @@ import "./index.css";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
+import Map from "./map/Map";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import Vis from "./Vis";
-import Viz1 from "./viz1";
+import Viz1 from "./map/viz1";
+import { geoUS } from "./map/geoUS";
 import reportWebVitals from "./reportWebVitals";
 
 export default function App() {
