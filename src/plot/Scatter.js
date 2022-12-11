@@ -20,12 +20,12 @@ export default function Scatter(props) {
 
   useEffect(() => {
     console.log(xAxisVal);
-    updateScatter(0);
+    computeRange(0);
   }, [xAxisVal]);
 
   useEffect(() => {
     console.log(yAxisVal);
-    updateScatter(1);
+    computeRange(1);
   }, [yAxisVal]);
 
   useEffect(() => {
@@ -116,28 +116,12 @@ export default function Scatter(props) {
     const xKey = xAxisVal;
     const yKey = yAxisVal;
 
-    let xData = dataset.map((v) => (v[xKey]));
-    let yData = dataset.map((v) => (v[yKey]));
-
-    const xMax = Math.max(...xData);
-    const xMin = Math.min(...xData);
-    const yMax = Math.max(...yData);
-    const yMin = Math.min(...yData);
-    let xRng = [Math.floor(xMin), Math.ceil(xMax + 1)];
-    let yRng = [Math.floor(yMin), Math.ceil(yMax + 1)];
-
     let data = dataset.filter((v) => (
       v[xKey] >= xSel[0]
       && v[xKey] <= xSel[1]
       && v[yKey] >= ySel[0]
       && v[yKey] <= ySel[1]
     ))
-
-    if (axis === 0) {
-      setXRange(xRng);
-    } else if (axis === 1) {
-      setYRange(yRng);
-    }
 
     const container = d3.select(scatterRef.current);
     const chartG = container.select("svg").select("#scatter");
@@ -191,6 +175,27 @@ export default function Scatter(props) {
       .duration(1000);
 
     dots.exit().remove();
+  }
+
+  function computeRange(axis) {
+    const xKey = xAxisVal;
+    const yKey = yAxisVal;
+
+    let xData = dataset.map((v) => (v[xKey]));
+    let yData = dataset.map((v) => (v[yKey]));
+
+    const xMax = Math.max(...xData);
+    const xMin = Math.min(...xData);
+    const yMax = Math.max(...yData);
+    const yMin = Math.min(...yData);
+    let xRng = [Math.floor(xMin), Math.ceil(xMax + 1)];
+    let yRng = [Math.floor(yMin), Math.ceil(yMax + 1)];
+
+    if (axis === 0) {
+      setXRange(xRng);
+    } else if (axis === 1) {
+      setYRange(yRng);
+    }
   }
 
   return (
