@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 import React, {useEffect, useState} from 'react';
 import {Select, Row, Col, Slider, Space} from "antd";
 import {dataset} from "../data";
+import "./scatter.css";
 
 export default function Scatter(props) {
   const scatterRef = React.useRef();
@@ -74,7 +75,18 @@ export default function Scatter(props) {
       .attr("id", "xAxis")
       .attr("transform", "translate(0," + height + ")");
 
-    let yAxis = chartG.append("g").attr("id", "yAxis");
+    let yAxis = chartG.append("g")
+      .attr("id", "yAxis");
+
+    let dots = chartG
+      .selectAll(".dot")
+      .data(dataset)
+      .enter()
+      .append("circle")
+      .attr("class", "dot")
+      .attr("cx", (d) => (Math.random() * width))
+      .attr("cy", (d) => (height))
+      .attr("r", 5);
   }
 
   function updateScatter() {
@@ -99,18 +111,20 @@ export default function Scatter(props) {
 
     // Add X axis
     let x = d3.scaleLinear()
-      .domain([xMin, xMax])
+      .domain([Math.floor(xMin - 1), Math.ceil(xMax + 1)])
       .range([ 0, width ]);
     let xAxis = chartG.select("#xAxis")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x).tickFormat((d) => d.toString()));
+      .call(d3.axisBottom(x).tickFormat((d) => d.toString()))
+      .transition().duration(1000);
 
     // Add Y axis
     let y = d3.scaleLinear()
-      .domain([yMin, yMax])
+      .domain([Math.floor(yMin - 1), Math.ceil(yMax+ 1)])
       .range([ height, 0]);
     let yAxis = chartG.select("#yAxis")
-      .call(d3.axisLeft(y).tickFormat((d) => d.toString()));
+      .call(d3.axisLeft(y).tickFormat((d) => d.toString()))
+      .transition().duration(1000);
 
     let dots = chartG
       .selectAll(".dot")
@@ -123,17 +137,18 @@ export default function Scatter(props) {
 
     dotsEnter
       .merge(dots)
-      .attr("cx", (d) => (x(d[xKey])))
-      .attr("cy", (d) => (y(d[yKey])))
+      .transition()
+      .attr("cx", (d) => (d[xKey] == null ? 0 : x(d[xKey])))
+      .attr("cy", (d) => (d[yKey] == null ? 0 : y(d[yKey])))
       .attr("r", 5)
-      .style("fill", "#69b3a2");
+      .duration(1000);
   }
 
   return (
     <Row>
       <Col span={18}>
         <Row>
-          <Col>
+          <Col span={1}>
             <Slider vertical range step={1} defaultValue={[0, 1000]} />
           </Col>
           <Col>
