@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import React, {useEffect, useState} from 'react';
-import {Select, Row, Col, Slider, Space, Descriptions} from "antd";
+import {Select, Row, Col, Slider, Descriptions, Empty, Button} from "antd";
 import {dataset} from "../data";
 import "./scatter.css";
 import ToolTip from "./ToolTip";
@@ -9,7 +9,7 @@ export default function Scatter(props) {
   const scatterRef = React.useRef();
 
   const [xAxisVal, setXAxis] = useState("Year");
-  const [yAxisVal, setYAxis] = useState("Injuries");
+  const [yAxisVal, setYAxis] = useState("Fatalities");
   const [xRange, setXRange] = useState([0, 100]);
   const [yRange, setYRange] = useState([0, 100]);
   const [xSel, setXSel] = useState([0, 100]);
@@ -51,12 +51,12 @@ export default function Scatter(props) {
       value: "Year"
     },
     {
-      label: "Injuries",
-      value: "Injuries"
-    },
-    {
       label: "Fatalities",
       value: "Fatalities"
+    },
+    {
+      label: "Injuries",
+      value: "Injuries"
     },
     {
       label: "Total Victims",
@@ -232,6 +232,11 @@ export default function Scatter(props) {
     setDescriptionData(data);
   }
 
+  function clearDescription() {
+    d3.selectAll(".dot").style("fill", "#69b3a2");
+    setDescriptionData(null);
+  }
+
   return (
     <Row>
       <Col xs={24} sm={24} md={24} lg={14}>
@@ -284,40 +289,47 @@ export default function Scatter(props) {
         </Row>
         <Row justify={"center"}>
           <Col span={16}>
-            <Descriptions title={"Details"}
-                          column={24}
-                          style={{width: "100%"}}
-            >
-              {
-                descriptionData !== null &&
+            {
+              descriptionData !== null ?
                 <>
-                  <Descriptions.Item label={"Case"} span={24} labelStyle={{fontWeight: "bold"}}>
-                    {descriptionData["Case"]}
-                  </Descriptions.Item>
-                  <Descriptions.Item label={"Location"} span={12} labelStyle={{fontWeight: "bold"}}>
-                    {descriptionData["Location"] || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item label={"Date"} span={12} labelStyle={{fontWeight: "bold"}}>
-                    {descriptionData["Date"] || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item label={"Total Victims"} span={8} labelStyle={{fontWeight: "bold"}}>
-                    {descriptionData["Total Victims"] || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item label={"Fatalities"} span={8} labelStyle={{fontWeight: "bold"}}>
-                    {descriptionData["Fatalities"] || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item label={"Injuries"} span={8} labelStyle={{fontWeight: "bold"}}>
-                    {descriptionData["Injuries"] || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item label={"Weapon(s)"} span={24} labelStyle={{fontWeight: "bold"}}>
-                    {descriptionData["weapon_details"] || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item label={"Summary"} span={24} labelStyle={{fontWeight: "bold"}}>
-                    {descriptionData["summary"] || "N/A"}
-                  </Descriptions.Item>
+                  <Descriptions title={"Details"}
+                                column={24}
+                                style={{width: "100%"}}
+                  >
+                    <Descriptions.Item label={"Case"} span={24} labelStyle={{fontWeight: "bold"}}>
+                      {descriptionData["Case"]}
+                    </Descriptions.Item>
+                    <Descriptions.Item label={"Location"} span={12} labelStyle={{fontWeight: "bold"}}>
+                      {descriptionData["Location"] || "N/A"}
+                    </Descriptions.Item>
+                    <Descriptions.Item label={"Date"} span={12} labelStyle={{fontWeight: "bold"}}>
+                      {descriptionData["Date"] || "N/A"}
+                    </Descriptions.Item>
+                    <Descriptions.Item label={"Total Victims"} span={8} labelStyle={{fontWeight: "bold"}}>
+                      {descriptionData["Total Victims"] || "N/A"}
+                    </Descriptions.Item>
+                    <Descriptions.Item label={"Fatalities"} span={8} labelStyle={{fontWeight: "bold"}}>
+                      {descriptionData["Fatalities"] || "N/A"}
+                    </Descriptions.Item>
+                    <Descriptions.Item label={"Injuries"} span={8} labelStyle={{fontWeight: "bold"}}>
+                      {descriptionData["Injuries"] || "N/A"}
+                    </Descriptions.Item>
+                    <Descriptions.Item label={"Weapon(s)"} span={24} labelStyle={{fontWeight: "bold"}}>
+                      {descriptionData["weapon_details"] || "N/A"}
+                    </Descriptions.Item>
+                    <Descriptions.Item label={"Summary"} span={24} labelStyle={{fontWeight: "bold"}}>
+                      {descriptionData["summary"] || "N/A"}
+                    </Descriptions.Item>
+                  </Descriptions>
+                  <Button onClick={clearDescription}> Clear </Button>
                 </>
-              }
-            </Descriptions>
+                :
+                <Empty style={{marginTop: "5em", marginBottom: "5em"}}>
+                  <span>
+                    Click a dot to show details.
+                  </span>
+                </Empty>
+            }
           </Col>
         </Row>
       </Col>
