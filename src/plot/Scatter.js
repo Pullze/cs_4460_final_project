@@ -178,7 +178,9 @@ export default function Scatter(props) {
       .attr("cx", (d) => (d[xKey] == null ? 0 : x(d[xKey])))
       .attr("cy", (d) => (d[yKey] == null ? 0 : y(d[yKey])))
       .attr("r", 5)
-      .attr("id", (d) => d["Case"].replace(/\s/g,''))
+      .attr("id", (d) => d["Case"]
+        .replace(/\s/g,'')
+        .replace(/\'/g,''))
       .duration(1000);
 
     dots.exit().remove();
@@ -228,7 +230,8 @@ export default function Scatter(props) {
 
   function  updateDescription(e, data) {
     d3.selectAll(".dot").style("fill", "#69b3a2");
-    d3.select('#' + data["Case"].replace(/\s/g,'')).style("fill", "#b3698d");
+    d3.select('#' + data["Case"].replace(/\s/g,'')
+      .replace(/\'/g,'')).style("fill", "#b3698d");
     setDescriptionData(data);
   }
 
