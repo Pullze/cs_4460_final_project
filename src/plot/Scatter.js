@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {Select, Row, Col, Slider, Space} from "antd";
 import {dataset} from "../data";
 import "./scatter.css";
+import ToolTip from "./ToolTip";
 
 export default function Scatter(props) {
   const scatterRef = React.useRef();
@@ -13,6 +14,7 @@ export default function Scatter(props) {
   const [yRange, setYRange] = useState([0, 100]);
   const [xSel, setXSel] = useState([0, 100]);
   const [ySel, setYSel] = useState([0, 100]);
+  const [tooltipData, setToolTipData] = useState(null);
 
   useEffect(() => {
     drawScatter();
@@ -168,6 +170,8 @@ export default function Scatter(props) {
 
     dotsEnter
       .merge(dots)
+      .on("mouseover", (e, d) => displayToolTip(e, d))
+      .on("mouseleave", (e) => hideToolTip())
       .transition()
       .attr("cx", (d) => (d[xKey] == null ? 0 : x(d[xKey])))
       .attr("cy", (d) => (d[yKey] == null ? 0 : y(d[yKey])))
@@ -184,10 +188,19 @@ export default function Scatter(props) {
     let xData = dataset.map((v) => (v[xKey]));
     let yData = dataset.map((v) => (v[yKey]));
 
-    const xMax = Math.max(...xData);
-    const xMin = Math.min(...xData);
-    const yMax = Math.max(...yData);
-    const yMin = Math.min(...yData);
+    let xMax = Math.max(...xData);
+    let xMin = Math.min(...xData);
+    let yMax = Math.max(...yData);
+    let yMin = Math.min(...yData);
+
+    if (0 < xMin && xMin < 10) {
+      xMin = 0;
+    }
+
+    if (0 < yMin && yMin < 10) {
+      yMin = 0;
+    }
+
     let xRng = [Math.floor(xMin), Math.ceil(xMax + 1)];
     let yRng = [Math.floor(yMin), Math.ceil(yMax + 1)];
 
@@ -198,10 +211,24 @@ export default function Scatter(props) {
     }
   }
 
+  function displayToolTip(e, data) {
+    setToolTipData({
+      name: data["Case"],
+      xPos: e.offsetX,
+      yPos: e.offsetY
+    });
+  }
+
+  function hideToolTip() {
+    setToolTipData(null);
+  }
+
   return (
     <Row>
       <Col xs={24} sm={24} md={24} lg={14}>
-        <div ref={scatterRef} style={{width: "100%", height: "600px"}}></div>
+        <div ref={scatterRef} style={{width: "100%", height: "600px"}}>
+          <ToolTip data={tooltipData}></ToolTip>
+        </div>
       </Col>
       <Col xs={24} sm={24} md={24} lg={10}>
         <Row gutter={8} justify={"center"}>
