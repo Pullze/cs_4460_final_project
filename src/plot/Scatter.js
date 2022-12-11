@@ -7,18 +7,40 @@ import "./scatter.css";
 export default function Scatter(props) {
   const scatterRef = React.useRef();
 
+  const [xAxisVal, setXAxis] = useState("Year");
+  const [yAxisVal, setYAxis] = useState("Injuries");
+  const [xRange, setXRange] = useState([0, 100]);
+  const [yRange, setYRange] = useState([0, 100]);
+  const [xSel, setXSel] = useState([0, 100]);
+  const [ySel, setYSel] = useState([0, 100]);
+
   useEffect(() => {
     drawScatter();
   }, []);
 
-  const [xAxisVal, setXAxis] = useState("Year");
-  const [yAxisVal, setYAxis] = useState("Injuries");
-
   useEffect(() => {
     console.log(xAxisVal);
+    updateScatter(0);
+  }, [xAxisVal]);
+
+  useEffect(() => {
     console.log(yAxisVal);
-    updateScatter();
-  }, [xAxisVal, yAxisVal, setXAxis, setYAxis]);
+    updateScatter(1);
+  }, [yAxisVal]);
+
+  useEffect(() => {
+    console.log(xRange);
+    setXSel(xRange);
+  }, [xRange]);
+
+  useEffect(() => {
+    console.log(yRange);
+    setYSel(yRange);
+  }, [yRange]);
+
+  useEffect(() => {
+    updateScatter(-1);
+  }, [xSel, ySel]);
 
   const axisContent = [
     {
@@ -89,7 +111,8 @@ export default function Scatter(props) {
       .attr("r", 5);
   }
 
-  function updateScatter() {
+  function updateScatter(axis) {
+
     const xKey = xAxisVal;
     const yKey = yAxisVal;
 
@@ -100,7 +123,21 @@ export default function Scatter(props) {
     const xMin = Math.min(...xData);
     const yMax = Math.max(...yData);
     const yMin = Math.min(...yData);
-    console.log(xMin, xMax, yMin, yMax)
+    let xRng = [Math.floor(xMin), Math.ceil(xMax + 1)];
+    let yRng = [Math.floor(yMin), Math.ceil(yMax + 1)];
+
+    let data = dataset.filter((v) => (
+      v[xKey] >= xSel[0]
+      && v[xKey] <= xSel[1]
+      && v[yKey] >= ySel[0]
+      && v[yKey] <= ySel[1]
+    ))
+
+    if (axis === 0) {
+      setXRange(xRng);
+    } else if (axis === 1) {
+      setYRange(yRng);
+    }
 
     const container = d3.select(scatterRef.current);
     const chartG = container.select("svg").select("#scatter");
@@ -111,24 +148,24 @@ export default function Scatter(props) {
 
     // Add X axis
     let x = d3.scaleLinear()
-      .domain([Math.floor(xMin - 1), Math.ceil(xMax + 1)])
+      .domain(xSel)
       .range([ 0, width ]);
     let xAxis = chartG.select("#xAxis")
+      .transition().duration(800)
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x).tickFormat((d) => d.toString()))
-      .transition().duration(1000);
+      .call(d3.axisBottom(x).tickFormat((d) => d.toString()));
 
     // Add Y axis
     let y = d3.scaleLinear()
-      .domain([Math.floor(yMin - 1), Math.ceil(yMax+ 1)])
+      .domain(ySel)
       .range([ height, 0]);
     let yAxis = chartG.select("#yAxis")
-      .call(d3.axisLeft(y).tickFormat((d) => d.toString()))
-      .transition().duration(1000);
+      .transition().duration(800)
+      .call(d3.axisLeft(y).tickFormat((d) => d.toString()));
 
     let dots = chartG
       .selectAll(".dot")
-      .data(dataset);
+      .data(data);
 
     let dotsEnter = dots
       .enter()
@@ -142,42 +179,58 @@ export default function Scatter(props) {
       .attr("cy", (d) => (d[yKey] == null ? 0 : y(d[yKey])))
       .attr("r", 5)
       .duration(1000);
+
+    dots.exit().remove();
   }
 
   return (
     <Row>
-      <Col span={18}>
-        <Row>
-          <Col span={1}>
-            <Slider vertical range step={1} defaultValue={[0, 1000]} />
-          </Col>
-          <Col>
-            <div ref={scatterRef} style={{width: "100%", height: "600px"}}></div>
-            <Slider range step={1} defaultValue={[0, 50]}/>
-          </Col>
-        </Row>
+      <Col xs={24} sm={24} md={24} lg={14}>
+        <div ref={scatterRef} style={{width: "100%", height: "600px"}}></div>
       </Col>
-      <Col span={6}>
-        <Space>
-          <div>
-            <span> X Axis: </span>
+      <Col xs={24} sm={24} md={24} lg={10}>
+        <Row gutter={8} justify={"center"}>
+          <Col span={12}>
+            <p style={{marginLeft: "10%"}}> X Axis: </p>
             <Select
               options={axisContent}
-              defaultValue={axisContent[0]}
-              style={{minWidth: "10em"}}
+              defaultValue={axisContent[0].value}
+              style={{width: "80%", marginLeft: "10%"}}
               onChange={(v) => {setXAxis(v)}}
             ></Select>
-          </div>
-          <div>
-            <span> Y Axis: </span>
+            <Slider id={"xSlider"}
+                    range step={1}
+                    min={xRange[0]}
+                    max={xRange[1]}
+                    value={xSel}
+                    marks={Object.assign({},...xRange.map(key => ({[key]: key.toString()})))}
+                    style={{width: "80%", marginLeft: "10%"}}
+                    onChange={(v) => {
+                      setXSel(v);
+                    }}
+            ></Slider>
+          </Col>
+          <Col span={12}>
+            <p style={{marginLeft: "10%"}}> Y Axis: </p>
             <Select
               options={axisContent}
-              defaultValue={axisContent[1]}
-              style={{minWidth: "10em"}}
+              defaultValue={axisContent[1].value}
+              style={{width: "80%", marginLeft: "10%"}}
               onChange={(v) => {setYAxis(v)}}
             ></Select>
-          </div>
-        </Space>
+            <Slider id={"ySlider"}
+                    range step={1}
+                    min={yRange[0]}
+                    max={yRange[1]}
+                    marks={Object.assign({},...yRange.map(key => ({[key]: key.toString()})))}
+                    value={ySel}
+                    style={{width: "80%", marginLeft: "10%"}}
+                    onChange={(v) => {
+                      setYSel(v);
+                    }}
+            ></Slider>
+          </Col>
+        </Row>
       </Col>
     </Row>
   );
