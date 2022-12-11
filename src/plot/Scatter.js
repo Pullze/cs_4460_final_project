@@ -149,19 +149,29 @@ export default function Scatter(props) {
     // Add X axis
     let x = d3.scaleLinear()
       .domain(xSel)
-      .range([ 0, width ]);
+      .range([ 0, width ])
+
+    let xTicks = x.ticks().filter(tick => Number.isInteger(tick));
+
     let xAxis = chartG.select("#xAxis")
       .transition().duration(800)
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x).tickFormat((d) => d.toString()));
+      .call(d3.axisBottom(x)
+        .tickValues(xTicks)
+        .tickFormat((d) => d.toString()));
 
     // Add Y axis
     let y = d3.scaleLinear()
       .domain(ySel)
-      .range([ height, 0]);
+      .range([ height, 0])
+
+    let yTicks = y.ticks().filter(tick => Number.isInteger(tick));
+
     let yAxis = chartG.select("#yAxis")
       .transition().duration(800)
-      .call(d3.axisLeft(y).tickFormat((d) => d.toString()));
+      .call(d3.axisLeft(y)
+        .tickValues(yTicks)
+        .tickFormat((d) => d.toString()));
 
     let dots = chartG
       .selectAll(".dot")
