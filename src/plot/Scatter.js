@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import React, {useEffect, useState} from 'react';
-import {Select, Row, Col, Slider, Space} from "antd";
+import {Select, Row, Col, Slider, Space, Descriptions} from "antd";
 import {dataset} from "../data";
 import "./scatter.css";
 import ToolTip from "./ToolTip";
@@ -15,6 +15,7 @@ export default function Scatter(props) {
   const [xSel, setXSel] = useState([0, 100]);
   const [ySel, setYSel] = useState([0, 100]);
   const [tooltipData, setToolTipData] = useState(null);
+  const [descriptionData, setDescriptionData] = useState(null);
 
   useEffect(() => {
     drawScatter();
@@ -172,10 +173,12 @@ export default function Scatter(props) {
       .merge(dots)
       .on("mouseover", (e, d) => displayToolTip(e, d))
       .on("mouseleave", (e) => hideToolTip())
+      .on("click", (e, d) => updateDescription(e, d))
       .transition()
       .attr("cx", (d) => (d[xKey] == null ? 0 : x(d[xKey])))
       .attr("cy", (d) => (d[yKey] == null ? 0 : y(d[yKey])))
       .attr("r", 5)
+      .attr("id", (d) => d["Case"].replace(/\s/g,''))
       .duration(1000);
 
     dots.exit().remove();
@@ -223,6 +226,12 @@ export default function Scatter(props) {
     setToolTipData(null);
   }
 
+  function  updateDescription(e, data) {
+    d3.selectAll(".dot").style("fill", "#69b3a2");
+    d3.select('#' + data["Case"].replace(/\s/g,'')).style("fill", "#b3698d");
+    setDescriptionData(data);
+  }
+
   return (
     <Row>
       <Col xs={24} sm={24} md={24} lg={14}>
@@ -232,12 +241,12 @@ export default function Scatter(props) {
       </Col>
       <Col xs={24} sm={24} md={24} lg={10}>
         <Row gutter={8} justify={"center"}>
-          <Col span={12}>
+          <Col span={8}>
             <p style={{marginLeft: "10%"}}> X Axis: </p>
             <Select
               options={axisContent}
               defaultValue={axisContent[0].value}
-              style={{width: "80%", marginLeft: "10%"}}
+              style={{width: "100%"}}
               onChange={(v) => {setXAxis(v)}}
             ></Select>
             <Slider id={"xSlider"}
@@ -252,12 +261,12 @@ export default function Scatter(props) {
                     }}
             ></Slider>
           </Col>
-          <Col span={12}>
+          <Col span={8}>
             <p style={{marginLeft: "10%"}}> Y Axis: </p>
             <Select
               options={axisContent}
               defaultValue={axisContent[1].value}
-              style={{width: "80%", marginLeft: "10%"}}
+              style={{width: "100%"}}
               onChange={(v) => {setYAxis(v)}}
             ></Select>
             <Slider id={"ySlider"}
@@ -271,6 +280,44 @@ export default function Scatter(props) {
                       setYSel(v);
                     }}
             ></Slider>
+          </Col>
+        </Row>
+        <Row justify={"center"}>
+          <Col span={16}>
+            <Descriptions title={"Details"}
+                          column={24}
+                          style={{width: "100%"}}
+            >
+              {
+                descriptionData !== null &&
+                <>
+                  <Descriptions.Item label={"Case"} span={24} labelStyle={{fontWeight: "bold"}}>
+                    {descriptionData["Case"]}
+                  </Descriptions.Item>
+                  <Descriptions.Item label={"Location"} span={12} labelStyle={{fontWeight: "bold"}}>
+                    {descriptionData["Location"] || "N/A"}
+                  </Descriptions.Item>
+                  <Descriptions.Item label={"Date"} span={12} labelStyle={{fontWeight: "bold"}}>
+                    {descriptionData["Date"] || "N/A"}
+                  </Descriptions.Item>
+                  <Descriptions.Item label={"Total Victims"} span={8} labelStyle={{fontWeight: "bold"}}>
+                    {descriptionData["Total Victims"] || "N/A"}
+                  </Descriptions.Item>
+                  <Descriptions.Item label={"Fatalities"} span={8} labelStyle={{fontWeight: "bold"}}>
+                    {descriptionData["Fatalities"] || "N/A"}
+                  </Descriptions.Item>
+                  <Descriptions.Item label={"Injuries"} span={8} labelStyle={{fontWeight: "bold"}}>
+                    {descriptionData["Injuries"] || "N/A"}
+                  </Descriptions.Item>
+                  <Descriptions.Item label={"Weapon(s)"} span={24} labelStyle={{fontWeight: "bold"}}>
+                    {descriptionData["weapon_details"] || "N/A"}
+                  </Descriptions.Item>
+                  <Descriptions.Item label={"Summary"} span={24} labelStyle={{fontWeight: "bold"}}>
+                    {descriptionData["summary"] || "N/A"}
+                  </Descriptions.Item>
+                </>
+              }
+            </Descriptions>
           </Col>
         </Row>
       </Col>
