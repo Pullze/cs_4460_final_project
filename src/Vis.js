@@ -4,6 +4,7 @@ import { Col, Layout, Row, Table } from "antd";
 import { Link, Outlet } from "react-router-dom";
 
 import { dataset } from "./data";
+import Scatter from "./plot/Scatter";
 
 const { Header, Footer, Content } = Layout;
 
@@ -46,6 +47,7 @@ export default function Vis(props) {
           <Col xs={24} sm={24} md={18} lg={18} xl={19} xxl={20}>
             <Content style={{ background: "#fff" }}>
               <h1> CS 4460 Final Vis</h1>
+              <Scatter data={dataset}></Scatter>
               <Table
                 dataSource={dataset}
                 rowKey={"Case"}

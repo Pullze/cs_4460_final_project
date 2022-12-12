@@ -167,15 +167,3 @@ const fillColorSelector = (data) => {
     return "#7a282e";
   }
 };
-/**
- * values for states fill color according to number of crimes
- */
-// #6d1919
-// #8b3e37
-// #a96158
-// #c6857c
-// #e3aaa1
-// #ffd0c8
-
-// color for circles
-//#ff9408
