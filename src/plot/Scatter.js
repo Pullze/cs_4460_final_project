@@ -180,7 +180,9 @@ export default function Scatter(props) {
       .attr("r", 5)
       .attr("id", (d) => d["Case"]
         .replace(/\s/g,'')
-        .replace(/\'/g,''))
+        .replace(/\'/g,'')
+        .replace(/\./g,'')
+        .replace(/[0-9]/g, ''))
       .duration(1000);
 
     dots.exit().remove();
@@ -229,9 +231,16 @@ export default function Scatter(props) {
   }
 
   function  updateDescription(e, data) {
-    d3.selectAll(".dot").style("fill", "#69b3a2");
-    d3.select('#' + data["Case"].replace(/\s/g,'')
-      .replace(/\'/g,'')).style("fill", "#b3698d");
+    d3.selectAll(".dot")
+      .style("fill", "#69b3a2")
+      .style("z-index", 1);
+    d3.select('#' + data["Case"]
+        .replace(/\s/g,'')
+        .replace(/\'/g,'')
+        .replace(/\./g,'')
+        .replace(/[0-9]/g, ''))
+      .style("fill", "#b3698d")
+      .style("z-index", 999);
     setDescriptionData(data);
   }
 

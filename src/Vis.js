@@ -50,6 +50,7 @@ export default function Vis(props) {
               <Scatter data={dataset}></Scatter>
               <Table
                 dataSource={dataset}
+                style={{paddingRight:"5%", paddingLeft:"5%"}}
                 rowKey={"Case"}
                 columns={columns}
                 expandable={{
