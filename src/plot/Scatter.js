@@ -96,15 +96,6 @@ export default function Scatter(props) {
     let yAxis = chartG.append("g")
       .attr("id", "yAxis");
 
-    let dots = chartG
-      .selectAll(".dot")
-      .data(dataset)
-      .enter()
-      .append("circle")
-      .attr("class", "dot")
-      .attr("cx", (d) => (Math.random() * width))
-      .attr("cy", (d) => (height))
-      .attr("r", 5);
   }
 
   function updateScatter(axis) {
@@ -154,12 +145,23 @@ export default function Scatter(props) {
         .tickFormat((d) => d.toString()));
 
     let dots = chartG
-      .selectAll("circle");
+      .selectAll("circle")
+      .data(data, (d) => (
+        d["Case"]
+          .replace(/\s/g,'')
+          .replace(/\'/g,'')
+          .replace(/\./g,'')
+          .replace(/[0-9]/g, '')
+      ));
 
     let dotsEnter = dots
       .enter()
       .append("circle")
       .attr("class", "dot");
+
+    dotsEnter
+      .attr("cx", (d) => (Math.random() * width))
+      .attr("cy", (d) => (height));
 
     dotsEnter
       .merge(dots)
@@ -177,7 +179,9 @@ export default function Scatter(props) {
         .replace(/[0-9]/g, ''))
       .duration(1000);
 
-    dots.exit().remove();
+    setTimeout(() => {
+      dots.exit().remove();
+    }, 1000);
   }
 
   function computeRange(axis) {
