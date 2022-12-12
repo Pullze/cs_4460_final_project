@@ -32,18 +32,10 @@ export default function Scatter(props) {
   }, [yAxisVal]);
 
   useEffect(() => {
-    console.log(xRange);
-    setXSel(xRange);
-  }, [xRange]);
-
-  useEffect(() => {
-    console.log(yRange);
-    setYSel(yRange);
-  }, [yRange]);
-
-  useEffect(() => {
     updateScatter(-1);
-    clearDescription();
+    if (descriptionData !== null) {
+      updateDescription(null, descriptionData);
+    }
   }, [xSel, ySel]);
 
   const axisContent = [
@@ -162,8 +154,7 @@ export default function Scatter(props) {
         .tickFormat((d) => d.toString()));
 
     let dots = chartG
-      .selectAll(".dot")
-      .data(data);
+      .selectAll("circle");
 
     let dotsEnter = dots
       .enter()
@@ -214,8 +205,10 @@ export default function Scatter(props) {
 
     if (axis === 0) {
       setXRange(xRng);
+      setXSel(xRng);
     } else if (axis === 1) {
       setYRange(yRng);
+      setYSel(yRng);
     }
   }
 
@@ -232,21 +225,19 @@ export default function Scatter(props) {
   }
 
   function  updateDescription(e, data) {
-    d3.selectAll(".dot")
-      .style("fill", "#69b3a2")
-      .style("z-index", 1);
+    d3.selectAll("circle")
+      .attr("class", "dot")
     d3.select('#' + data["Case"]
         .replace(/\s/g,'')
         .replace(/\'/g,'')
         .replace(/\./g,'')
         .replace(/[0-9]/g, ''))
-      .style("fill", "#b3698d")
-      .style("z-index", 999);
+      .attr("class", "dot-sel")
     setDescriptionData(data);
   }
 
   function clearDescription() {
-    d3.selectAll(".dot").style("fill", "#69b3a2");
+    d3.selectAll("circle").attr("class", "dot");
     setDescriptionData(null);
   }
 
