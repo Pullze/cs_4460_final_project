@@ -43,6 +43,7 @@ export default function Scatter(props) {
 
   useEffect(() => {
     updateScatter(-1);
+    clearDescription();
   }, [xSel, ySel]);
 
   const axisContent = [
@@ -259,7 +260,7 @@ export default function Scatter(props) {
       <Col xs={24} sm={24} md={24} lg={10}>
         <Row gutter={8} justify={"center"}>
           <Col span={8}>
-            <p style={{marginLeft: "10%"}}> X Axis: </p>
+            <p> X Axis: </p>
             <Select
               options={axisContent}
               defaultValue={axisContent[0].value}
@@ -279,7 +280,7 @@ export default function Scatter(props) {
             ></Slider>
           </Col>
           <Col span={8}>
-            <p style={{marginLeft: "10%"}}> Y Axis: </p>
+            <p> Y Axis: </p>
             <Select
               options={axisContent}
               defaultValue={axisContent[1].value}
