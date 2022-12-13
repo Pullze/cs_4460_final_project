@@ -82,7 +82,19 @@ export default function Vis(props) {
                 columns={columns}
                 expandable={{
                   expandedRowRender: (record) => (
-                    <Descriptions style={{width: "90%", paddingLeft: "5%"}} column={24}>
+                    <Descriptions style={{width: "90%", paddingLeft: "5%"}}
+                                  column={24} bordered
+                                  size={"small"}
+                    >
+                      <Descriptions.Item label={"Shooter's Age"} span={8} labelStyle={{fontWeight: "bold"}}>
+                        {record["Age"] || "N/A"}
+                      </Descriptions.Item>
+                      <Descriptions.Item label={"Gender"} span={8} labelStyle={{fontWeight: "bold"}}>
+                        {record["Gender"] || "N/A"}
+                      </Descriptions.Item>
+                      <Descriptions.Item label={"Race"} span={8} labelStyle={{fontWeight: "bold"}}>
+                        {record["Race"] || "N/A"}
+                      </Descriptions.Item>
                       <Descriptions.Item label={"Weapon(s)"} span={24} labelStyle={{fontWeight: "bold"}}>
                         {record["weapon_details"] || "N/A"}
                       </Descriptions.Item>
