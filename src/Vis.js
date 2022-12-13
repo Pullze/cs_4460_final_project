@@ -3,8 +3,9 @@ import "antd/dist/reset.css";
 import { Col, Layout, Row, Table } from "antd";
 import { Link, Outlet } from "react-router-dom";
 
-import { dataset } from "./data";
+import MapPage from "./map/MapPage";
 import Scatter from "./plot/Scatter";
+import { dataset } from "./data";
 
 const { Header, Footer, Content } = Layout;
 
@@ -48,6 +49,7 @@ export default function Vis(props) {
             <Content style={{ background: "#fff" }}>
               <h1> CS 4460 Final Vis</h1>
               <Scatter data={dataset}></Scatter>
+              <MapPage />
               <Table
                 dataSource={dataset}
                 rowKey={"Case"}
