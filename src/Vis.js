@@ -37,7 +37,6 @@ export default function Vis(props) {
           <Text keyboard style={{ lineHeight: "64px", fontSize: "22px" }}>
             CS 4460 Info Vis
           </Text>
-          <Link to="/1">Header</Link>
         </Header>
         <Row justify={"center"}>
           <Col xs={20} sm={20} md={20} lg={18} xl={18} xxl={18}>
