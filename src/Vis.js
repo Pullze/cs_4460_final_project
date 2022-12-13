@@ -7,11 +7,13 @@ import {
   Layout,
   Row,
   Table,
+  Tabs,
   Typography,
 } from "antd";
 import { Link, Outlet } from "react-router-dom";
 
 import CaseTable from "./CaseTable";
+import MapPage from "./map/MapPage";
 import React from "react";
 import Scatter from "./plot/Scatter";
 import { dataset } from "./data";
@@ -50,7 +52,24 @@ export default function Vis(props) {
                 <Title level={1}> US Mass Shootings, 1982–2022 </Title>
                 <Text italic> Lidan Zheng, Lai Wang </Text>
               </>
-              <Scatter data={dataset}></Scatter>
+              <Tabs
+                defaultActiveKey="1"
+                type="card"
+                items={[
+                  {
+                    label: "Plot",
+                    key: "1",
+                    children: <Scatter data={dataset}></Scatter>,
+                  },
+                  {
+                    label: "Map",
+                    key: "2",
+                    children: <MapPage />,
+                  },
+                ]}
+                // onChange={(activeKey) => setActiveTab(activeKey)}
+              />
+              {/* <Scatter data={dataset}></Scatter> */}
               <>
                 <Title level={2}> Dataset </Title>
                 <Paragraph>
@@ -73,7 +92,7 @@ export default function Vis(props) {
                   of each case.
                 </Paragraph>
               </>
-              <CaseTable />
+              <CaseTable dataset={dataset} />
             </Content>
           </Col>
         </Row>

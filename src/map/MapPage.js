@@ -12,7 +12,7 @@ const { Header, Footer, Content } = Layout;
 export default function MapPage() {
   const mapRef = useRef();
   return (
-    <div id="map" ref={mapRef}>
+    <div ref={mapRef}>
       <UsMap mapData={geoUS.features} />
     </div>
   );

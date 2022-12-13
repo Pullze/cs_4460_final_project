@@ -3,9 +3,8 @@ import "antd/dist/reset.css";
 import { Descriptions, Table } from "antd";
 
 import React from "react";
-import { dataset } from "./data";
 
-const CaseTable = () => {
+const CaseTable = ({ dataset }) => {
   const columns = [
     {
       title: "Case",

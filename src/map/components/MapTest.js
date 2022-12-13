@@ -2,6 +2,7 @@ import "./Map.css";
 
 import * as d3 from "d3";
 
+import { Button, Col, Row, Select, Slider } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import {
   handleMouseMove,
@@ -9,6 +10,8 @@ import {
   handleMouseOver,
 } from "../helpers/tooltipsHandlers";
 
+import CaseTable from "../../CaseTable";
+import DescriptionTable from "../../DescriptionTable";
 import YearSlider from "./YearSlider";
 import { dataset } from "../../data";
 import { formatDetails } from "../helpers/formatDetails";
@@ -18,6 +21,8 @@ const UsMap = ({ mapData }) => {
   const projRef = useRef(d3.geoMercator().center([-90.93, 40.72]).scale(700));
   var stateAndCases = new Map();
   const [currentDataset, setCurrentDataset] = useState(dataset);
+  const [currentTableData, setCurrentTableData] = useState(currentDataset);
+  const [descriptionData, setDescriptionData] = useState(null);
   var map;
   useEffect(() => {
     stateAndCases = new Map();
@@ -28,7 +33,8 @@ const UsMap = ({ mapData }) => {
     renderMap(mapData);
     d3.selectAll(".case").remove();
     renderCircles(currentDataset);
-  }, [currentDataset]);
+    renderTable(currentTableData);
+  }, [currentDataset, currentTableData]);
 
   // Add tooltip
   useEffect(() => {
@@ -74,9 +80,15 @@ const UsMap = ({ mapData }) => {
         handleMouseOver(tooltipMsg);
       })
       .on("mousemove", handleMouseMove)
-      .on("mouseleave", handleMouseOut);
+      .on("mouseleave", handleMouseOut)
+      .on("click", (d) => {
+        updateTable(d.srcElement.__data__.properties.NAME);
+      });
   };
 
+  const renderTable = (currentTableData) => {
+    return <CaseTable dataset={currentTableData} />;
+  };
   const renderCircles = (currentDataset) => {
     const circles = d3
       .select(svgRef.current)
@@ -106,6 +118,9 @@ const UsMap = ({ mapData }) => {
       })
       .on("mousemove", handleMouseMove)
       .on("mouseleave", handleMouseOut)
+      .on("click", (d) => {
+        setDescriptionData(d.srcElement.__data__);
+      })
       .attr("opacity", 0)
       .transition()
       .duration(500)
@@ -114,6 +129,9 @@ const UsMap = ({ mapData }) => {
     circles.exit().transition().duration(500).style("opacity", 0).remove();
   };
 
+  const clearDescription = () => {
+    setDescriptionData(null);
+  };
   const parseStateData = (data) => {
     const location = data["Location"].split(", ");
     var stateName = location.length === 1 ? location[0] : location[1];
@@ -132,12 +150,51 @@ const UsMap = ({ mapData }) => {
     setCurrentDataset(data);
   };
 
+  const updateTable = (value) => {
+    const data = currentDataset.filter((d) => {
+      const location = d["Location"].split(", ");
+      var stateName = location.length === 1 ? location[0] : location[1];
+      return value === stateName ? d : null;
+    });
+    setCurrentTableData(data);
+  };
+
   return (
     <>
-      <svg ref={svgRef}></svg>
-      <div className="slider">
-        <YearSlider onChange={updateCircles} />
-      </div>
+      <Row style={{ paddingBottom: "5%" }}>
+        <Col xs={24} sm={24} md={24} lg={14}>
+          {/* <div ref={scatterRef} style={{ width: "100%", height: "600px" }}>
+            <ToolTip data={tooltipData}></ToolTip>
+          </div> */}
+          <Row justify={"start"}>
+            <div className="map" id="map">
+              <svg ref={svgRef}></svg>
+              <div className="slider">
+                <YearSlider onChange={updateCircles} />
+              </div>
+            </div>
+          </Row>
+        </Col>
+        <Col xs={24} sm={24} md={24} lg={10}>
+          <Row justify={"start"}>
+            <Col span={24}>
+              <DescriptionTable
+                descriptionData={descriptionData}
+                clearDescription={clearDescription}
+              />
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+      <>
+        {renderTable(currentTableData)}
+        <Button
+          style={{ marginTop: "-20%", marginLeft: "50%" }}
+          onClick={() => setCurrentTableData(currentDataset)}
+        >
+          Reset
+        </Button>
+      </>
     </>
   );
 };
