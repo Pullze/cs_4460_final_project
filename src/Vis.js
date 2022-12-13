@@ -63,7 +63,7 @@ export default function Vis(props) {
                   Our visualizations provide insights on the frequency and location of mass shootings, as well as
                   key trends and patterns in mass shootings, such as the high concentration of incidents in certain
                   states. We provides a scatter plot and a map which is switchable in the tabs below. Both visualization
-                  is interactive.
+                  are interactive.
                 </Paragraph>
               </>
               <Tabs
