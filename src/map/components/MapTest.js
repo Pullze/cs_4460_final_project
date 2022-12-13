@@ -2,7 +2,7 @@ import "./Map.css";
 
 import * as d3 from "d3";
 
-import { Button, Col, Row, Select, Slider } from "antd";
+import {Button, Col, Empty, Row, Select, Slider, Space} from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import {
   handleMouseMove,
@@ -23,6 +23,8 @@ const UsMap = ({ mapData }) => {
   const [currentDataset, setCurrentDataset] = useState(dataset);
   const [currentTableData, setCurrentTableData] = useState(currentDataset);
   const [descriptionData, setDescriptionData] = useState(null);
+  const [stateKey, setStateKey] = useState(null);
+
   var map;
   useEffect(() => {
     stateAndCases = new Map();
@@ -33,8 +35,11 @@ const UsMap = ({ mapData }) => {
     renderMap(mapData);
     d3.selectAll(".case").remove();
     renderCircles(currentDataset);
-    renderTable(currentTableData);
-  }, [currentDataset, currentTableData]);
+  }, [currentDataset]);
+
+  useEffect(() => {
+    updateTable(stateKey);
+  }, [stateKey, currentDataset]);
 
   // Add tooltip
   useEffect(() => {
@@ -82,13 +87,11 @@ const UsMap = ({ mapData }) => {
       .on("mousemove", handleMouseMove)
       .on("mouseleave", handleMouseOut)
       .on("click", (d) => {
-        updateTable(d.srcElement.__data__.properties.NAME);
+        clearDescription();
+        setStateKey(d.srcElement.__data__.properties.NAME);
       });
   };
 
-  const renderTable = (currentTableData) => {
-    return <CaseTable dataset={currentTableData} />;
-  };
   const renderCircles = (currentDataset) => {
     const circles = d3
       .select(svgRef.current)
@@ -151,6 +154,7 @@ const UsMap = ({ mapData }) => {
   };
 
   const updateTable = (value) => {
+    setStateKey(value);
     const data = currentDataset.filter((d) => {
       const location = d["Location"].split(", ");
       var stateName = location.length === 1 ? location[0] : location[1];
@@ -158,6 +162,38 @@ const UsMap = ({ mapData }) => {
     });
     setCurrentTableData(data);
   };
+
+  const renderDetail = () => {
+    if (descriptionData !== null) {
+      return (
+        <DescriptionTable
+          descriptionData={descriptionData}
+          clearDescription={clearDescription}
+        ></DescriptionTable>
+      )
+    } else if (stateKey !== null) {
+      return (
+        <Space direction={"vertical"}>
+          <span style={{marginLeft: "5%", fontWeight: "bold"}}> Current State: {stateKey || "N/A"}</span>
+          <CaseTable dataset={currentTableData}></CaseTable>
+          <Button
+            style={{marginLeft: "5%"}}
+            onClick={() => {
+              setStateKey(null);
+            }}
+          >
+            Clear Selection
+          </Button>
+        </Space>
+      )
+    } else {
+      return (
+        <Empty style={{ marginTop: "12vh", marginBottom: "5em" }}>
+          <span>Click a dot/state to show details.</span>
+        </Empty>
+      )
+    }
+  }
 
   return (
     <>
@@ -178,23 +214,13 @@ const UsMap = ({ mapData }) => {
         <Col xs={24} sm={24} md={24} lg={10}>
           <Row justify={"start"}>
             <Col span={24}>
-              <DescriptionTable
-                descriptionData={descriptionData}
-                clearDescription={clearDescription}
-              />
+              {
+                renderDetail()
+              }
             </Col>
           </Row>
         </Col>
       </Row>
-      <>
-        {renderTable(currentTableData)}
-        <Button
-          style={{ marginTop: "-20%", marginLeft: "50%" }}
-          onClick={() => setCurrentTableData(currentDataset)}
-        >
-          Reset
-        </Button>
-      </>
     </>
   );
 };

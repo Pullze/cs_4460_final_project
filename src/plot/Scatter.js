@@ -251,7 +251,7 @@ export default function Scatter(props) {
   }
 
   function clearDescription() {
-    d3.selectAll("circle").attr("class", "dot");
+    d3.select("#scatter").selectAll("circle").attr("class", "dot");
     setDescriptionData(null);
   }
 

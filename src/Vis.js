@@ -48,10 +48,11 @@ export default function Vis(props) {
               }}
             >
               <>
-                <Title level={1}> US Mass Shootings, 1982–2022 </Title>
+                <Title level={1} style={{marginBottom: 0}}> US Mass Shootings, 1982–2022 </Title>
                 <Text italic> Lidan Zheng, Lai Wang </Text>
               </>
               <Tabs
+                style={{marginTop: "4vh"}}
                 defaultActiveKey="1"
                 type="card"
                 items={[
@@ -78,6 +79,7 @@ export default function Vis(props) {
                     href={
                       "https://www.motherjones.com/politics/2012/12/mass-shootings-mother-jones-full-data/"
                     }
+                    target={"_blank"}
                   >
                     Mother Jones
                   </a>

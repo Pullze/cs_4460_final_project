@@ -8,7 +8,7 @@ const DescriptionTable = ({ descriptionData, clearDescription }) => {
   return descriptionData !== null ? (
     <Space direction={"vertical"}>
       <Descriptions
-        title={"Details"}
+        title={"Case Details"}
         column={24}
         style={{ width: "100%" }}
         bordered

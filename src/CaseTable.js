@@ -64,6 +64,10 @@ const CaseTable = ({ dataset }) => {
       style={{ paddingRight: "5%", paddingLeft: "5%" }}
       rowKey={"Case"}
       columns={columns}
+      pagination={false}
+      scroll={{
+        y: 480
+      }}
       expandable={{
         expandedRowRender: (record) => (
           <Descriptions
