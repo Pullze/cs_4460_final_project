@@ -32,9 +32,7 @@
 }
 
 .case {
-  fill: #d07000;
   fill-opacity: 0.7;
-  stroke: #c55300;
   stroke-width: 2px;
 }
 
@@ -47,4 +45,17 @@
 .slider {
   margin-left: 5%;
   width: 80%;
+}
+
+#legend {
+  width: 80%;
+}
+.circle-legend {
+  display: flex;
+  flex-direction: column;
+  width: 15px;
+  height: 15px;
+
+  opacity: 70%;
+  border-radius: 50%;
 }

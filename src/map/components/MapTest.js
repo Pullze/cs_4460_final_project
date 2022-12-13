@@ -11,6 +11,7 @@ import {
 } from "../helpers/tooltipsHandlers";
 
 import CaseTable from "../../CaseTable";
+import { Colorscale } from "react-colorscales";
 import DescriptionTable from "../../DescriptionTable";
 import YearSlider from "./YearSlider";
 import { dataset } from "../../data";
@@ -24,7 +25,19 @@ const UsMap = ({ mapData }) => {
   const [currentTableData, setCurrentTableData] = useState(currentDataset);
   const [descriptionData, setDescriptionData] = useState(null);
   const [stateKey, setStateKey] = useState(null);
-
+  const colorscale = [
+    "#AAAAAA",
+    "#F5E4E4",
+    "#e6cac9",
+    "#d8b1af",
+    "#c89996",
+    "#b9817e",
+    "#a96967",
+    "#985150",
+    "#873a3a",
+    "#7a3c40",
+    "#7a282e",
+  ];
   var map;
   useEffect(() => {
     stateAndCases = new Map();
@@ -122,6 +135,18 @@ const UsMap = ({ mapData }) => {
         }
         return d["Total Victims"] / 2;
       })
+      .style("fill", (d) => {
+        if (d["Type"] === "Spree") {
+          return "#753188";
+        }
+        return "#d07000";
+      })
+      .style("stroke", (d) => {
+        if (d["Type"] === "Spree") {
+          return "#9F5F80";
+        }
+        return "#d07000";
+      })
       .attr("class", "case")
       .attr("id", (d, i) => {
         return `${d["Date"] + i}`;
@@ -214,6 +239,19 @@ const UsMap = ({ mapData }) => {
       <Row style={{ paddingBottom: "5%" }}>
         <Col xs={24} sm={24} md={24} lg={14}>
           <Row justify={"start"}>
+            <div className="slider">
+              <Colorscale colorscale={colorscale} />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <h4>19+</h4>
+              </div>
+            </div>
+
             <div className="map" id="map">
               <svg ref={svgRef}></svg>
               <div className="slider">
@@ -223,6 +261,30 @@ const UsMap = ({ mapData }) => {
           </Row>
         </Col>
         <Col xs={24} sm={24} md={24} lg={10}>
+          <Row justify={"start"}>
+            <Col>
+              <div
+                className="circle-legend"
+                style={{ backgroundColor: "#753188" }}
+              ></div>
+            </Col>
+
+            <Col style={{ marginTop: "-0.8%", marginLeft: "1.5%" }}>
+              <h4>Spree</h4>
+            </Col>
+          </Row>
+          <Row justify={"start"}>
+            <Col>
+              <div
+                className="circle-legend"
+                style={{ backgroundColor: "#d07000" }}
+              ></div>
+            </Col>
+
+            <Col style={{ marginTop: "-0.8%", marginLeft: "1.5%" }}>
+              <h4>Mass</h4>
+            </Col>
+          </Row>
           <Row justify={"start"}>
             <Col span={24}>{renderDetail()}</Col>
           </Row>
