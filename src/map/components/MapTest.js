@@ -2,7 +2,7 @@ import "./Map.css";
 
 import * as d3 from "d3";
 
-import {Button, Col, Empty, Row, Select, Slider, Space} from "antd";
+import { Button, Col, Empty, Row, Select, Slider, Space } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import {
   handleMouseMove,
@@ -49,6 +49,10 @@ const UsMap = ({ mapData }) => {
       .attr("style", "position: absolute; opacity: 0");
   }, [mapData]);
 
+  /**
+   * render the US map
+   * the color of the state vaires based on the number of shooting cases
+   */
   const renderMap = (mapData) => {
     const height = svgRef.current.clientHeight;
     const width = svgRef.current.clientWidth;
@@ -92,6 +96,11 @@ const UsMap = ({ mapData }) => {
       });
   };
 
+  /**
+   * render the circles on the map
+   * The size of circle varies based on total victims
+   * The color varies based on the type of shooting case
+   */
   const renderCircles = (currentDataset) => {
     const circles = d3
       .select(svgRef.current)
@@ -107,6 +116,7 @@ const UsMap = ({ mapData }) => {
           "translate(" + projRef.current([d["Longitude"], d["Latitude"]]) + ")"
       )
       .attr("r", (d) => {
+        console.log(d["Type"]);
         if (d["Total Victims"] / 2 > 15) {
           return (2 * d["Total Victims"]) % 10;
         }
@@ -132,6 +142,7 @@ const UsMap = ({ mapData }) => {
     circles.exit().transition().duration(500).style("opacity", 0).remove();
   };
 
+  // helper functions
   const clearDescription = () => {
     setDescriptionData(null);
   };
@@ -170,14 +181,17 @@ const UsMap = ({ mapData }) => {
           descriptionData={descriptionData}
           clearDescription={clearDescription}
         ></DescriptionTable>
-      )
+      );
     } else if (stateKey !== null) {
       return (
         <Space direction={"vertical"}>
-          <span style={{marginLeft: "5%", fontWeight: "bold"}}> Current State: {stateKey || "N/A"}</span>
+          <span style={{ marginLeft: "5%", fontWeight: "bold" }}>
+            {" "}
+            Current State: {stateKey || "N/A"}
+          </span>
           <CaseTable dataset={currentTableData}></CaseTable>
           <Button
-            style={{marginLeft: "5%"}}
+            style={{ marginLeft: "5%" }}
             onClick={() => {
               setStateKey(null);
             }}
@@ -185,23 +199,20 @@ const UsMap = ({ mapData }) => {
             Clear Selection
           </Button>
         </Space>
-      )
+      );
     } else {
       return (
         <Empty style={{ marginTop: "12vh", marginBottom: "5em" }}>
           <span>Click a dot/state to show details.</span>
         </Empty>
-      )
+      );
     }
-  }
+  };
 
   return (
     <>
       <Row style={{ paddingBottom: "5%" }}>
         <Col xs={24} sm={24} md={24} lg={14}>
-          {/* <div ref={scatterRef} style={{ width: "100%", height: "600px" }}>
-            <ToolTip data={tooltipData}></ToolTip>
-          </div> */}
           <Row justify={"start"}>
             <div className="map" id="map">
               <svg ref={svgRef}></svg>
@@ -213,11 +224,7 @@ const UsMap = ({ mapData }) => {
         </Col>
         <Col xs={24} sm={24} md={24} lg={10}>
           <Row justify={"start"}>
-            <Col span={24}>
-              {
-                renderDetail()
-              }
-            </Col>
+            <Col span={24}>{renderDetail()}</Col>
           </Row>
         </Col>
       </Row>
