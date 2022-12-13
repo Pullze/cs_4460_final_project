@@ -2,7 +2,16 @@ import "./scatter.css";
 
 import * as d3 from "d3";
 
-import { Button, Col, Descriptions, Empty, Row, Select, Slider } from "antd";
+import {
+  Button,
+  Col,
+  Descriptions,
+  Empty,
+  Row,
+  Select,
+  Slider,
+  Space,
+} from "antd";
 import React, { useEffect, useState } from "react";
 
 import ToolTip from "./ToolTip";
@@ -253,7 +262,7 @@ export default function Scatter(props) {
   }
 
   return (
-    <Row>
+    <Row style={{ paddingTop: "5%", paddingBottom: "5%" }}>
       <Col xs={24} sm={24} md={24} lg={14}>
         <div ref={scatterRef} style={{ width: "100%", height: "600px" }}>
           <ToolTip data={tooltipData}></ToolTip>
@@ -319,11 +328,13 @@ export default function Scatter(props) {
         <Row justify={"start"}>
           <Col span={24}>
             {descriptionData !== null ? (
-              <>
+              <Space direction={"vertical"}>
                 <Descriptions
                   title={"Details"}
                   column={24}
                   style={{ width: "100%" }}
+                  bordered
+                  size={"small"}
                 >
                   <Descriptions.Item
                     label={"Case"}
@@ -368,6 +379,27 @@ export default function Scatter(props) {
                     {descriptionData["Injuries"] || "N/A"}
                   </Descriptions.Item>
                   <Descriptions.Item
+                    label={"Shooter's Age"}
+                    span={8}
+                    labelStyle={{ fontWeight: "bold" }}
+                  >
+                    {descriptionData["Age"] || "N/A"}
+                  </Descriptions.Item>
+                  <Descriptions.Item
+                    label={"Gender"}
+                    span={8}
+                    labelStyle={{ fontWeight: "bold" }}
+                  >
+                    {descriptionData["Gender"] || "N/A"}
+                  </Descriptions.Item>
+                  <Descriptions.Item
+                    label={"Race"}
+                    span={8}
+                    labelStyle={{ fontWeight: "bold" }}
+                  >
+                    {descriptionData["Race"] || "N/A"}
+                  </Descriptions.Item>
+                  <Descriptions.Item
                     label={"Weapon(s)"}
                     span={24}
                     labelStyle={{ fontWeight: "bold" }}
@@ -383,7 +415,7 @@ export default function Scatter(props) {
                   </Descriptions.Item>
                 </Descriptions>
                 <Button onClick={clearDescription}> Clear </Button>
-              </>
+              </Space>
             ) : (
               <Empty style={{ marginTop: "5em", marginBottom: "5em" }}>
                 <span>Click a dot to show details.</span>
