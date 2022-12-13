@@ -11,9 +11,12 @@ import {
   Select,
   Slider,
   Space,
+  Tabs,
 } from "antd";
 import React, { useEffect, useState } from "react";
 
+import CaseTable from "../CaseTable";
+import MapPage from "../map/MapPage";
 import ToolTip from "./ToolTip";
 import { dataset } from "../data";
 
@@ -28,11 +31,14 @@ export default function Scatter(props) {
   const [ySel, setYSel] = useState([0, 100]);
   const [tooltipData, setToolTipData] = useState(null);
   const [descriptionData, setDescriptionData] = useState(null);
+  const [activeTab, setActiveTab] = useState("1");
 
   useEffect(() => {
     drawScatter();
   }, []);
-
+  useEffect(() => {
+    renderTable();
+  }, [activeTab]);
   useEffect(() => {
     console.log(xAxisVal);
     computeRange(0);
@@ -49,7 +55,9 @@ export default function Scatter(props) {
       updateDescription(null, descriptionData);
     }
   }, [xSel, ySel]);
-
+  const renderTable = () => {
+    return activeTab === "2" ? <CaseTable /> : <></>;
+  };
   const axisContent = [
     {
       label: "Year",
@@ -262,168 +270,195 @@ export default function Scatter(props) {
   }
 
   return (
-    <Row style={{ paddingTop: "5%", paddingBottom: "5%" }}>
-      <Col xs={24} sm={24} md={24} lg={14}>
-        <div ref={scatterRef} style={{ width: "100%", height: "600px" }}>
+    <>
+      <Row style={{ paddingTop: "5%", paddingBottom: "5%" }}>
+        <Col xs={24} sm={24} md={24} lg={14}>
+          <Tabs
+            defaultActiveKey="1"
+            type="card"
+            items={[
+              {
+                label: "Plot",
+                key: "1",
+                children: (
+                  <div
+                    ref={scatterRef}
+                    style={{ width: "100%", height: "600px" }}
+                  >
+                    <ToolTip data={tooltipData}></ToolTip>
+                  </div>
+                ),
+              },
+              {
+                label: "Map",
+                key: "2",
+                children: <MapPage />,
+              },
+            ]}
+            onChange={(activeKey) => setActiveTab(activeKey)}
+          />
+          {/* <div ref={scatterRef} style={{ width: "100%", height: "600px" }}>
           <ToolTip data={tooltipData}></ToolTip>
-        </div>
-      </Col>
-      <Col xs={24} sm={24} md={24} lg={10}>
-        <Row gutter={8} justify={"start"}>
-          <Col span={12}>
-            <p> X Axis: </p>
-            <Select
-              options={axisContent}
-              defaultValue={axisContent[0].value}
-              style={{ width: "100%" }}
-              onChange={(v) => {
-                setXAxis(v);
-              }}
-            ></Select>
-            <Slider
-              id={"xSlider"}
-              range
-              step={1}
-              min={xRange[0]}
-              max={xRange[1]}
-              value={xSel}
-              marks={Object.assign(
-                {},
-                ...xRange.map((key) => ({ [key]: key.toString() }))
+        </div> */}
+        </Col>
+        <Col xs={24} sm={24} md={24} lg={10}>
+          <Row gutter={8} justify={"start"}>
+            <Col span={12}>
+              <p> X Axis: </p>
+              <Select
+                options={axisContent}
+                defaultValue={axisContent[0].value}
+                style={{ width: "100%" }}
+                onChange={(v) => {
+                  setXAxis(v);
+                }}
+              ></Select>
+              <Slider
+                id={"xSlider"}
+                range
+                step={1}
+                min={xRange[0]}
+                max={xRange[1]}
+                value={xSel}
+                marks={Object.assign(
+                  {},
+                  ...xRange.map((key) => ({ [key]: key.toString() }))
+                )}
+                style={{ width: "80%", marginLeft: "10%" }}
+                onChange={(v) => {
+                  setXSel(v);
+                }}
+              ></Slider>
+            </Col>
+            <Col span={12}>
+              <p> Y Axis: </p>
+              <Select
+                options={axisContent}
+                defaultValue={axisContent[1].value}
+                style={{ width: "100%" }}
+                onChange={(v) => {
+                  setYAxis(v);
+                }}
+              ></Select>
+              <Slider
+                id={"ySlider"}
+                range
+                step={1}
+                min={yRange[0]}
+                max={yRange[1]}
+                marks={Object.assign(
+                  {},
+                  ...yRange.map((key) => ({ [key]: key.toString() }))
+                )}
+                value={ySel}
+                style={{ width: "80%", marginLeft: "10%" }}
+                onChange={(v) => {
+                  setYSel(v);
+                }}
+              ></Slider>
+            </Col>
+          </Row>
+          <Row justify={"start"}>
+            <Col span={24}>
+              {descriptionData !== null ? (
+                <Space direction={"vertical"}>
+                  <Descriptions
+                    title={"Details"}
+                    column={24}
+                    style={{ width: "100%" }}
+                    bordered
+                    size={"small"}
+                  >
+                    <Descriptions.Item
+                      label={"Case"}
+                      span={24}
+                      labelStyle={{ fontWeight: "bold" }}
+                    >
+                      {descriptionData["Case"]}
+                    </Descriptions.Item>
+                    <Descriptions.Item
+                      label={"Location"}
+                      span={12}
+                      labelStyle={{ fontWeight: "bold" }}
+                    >
+                      {descriptionData["Location"] || "N/A"}
+                    </Descriptions.Item>
+                    <Descriptions.Item
+                      label={"Date"}
+                      span={12}
+                      labelStyle={{ fontWeight: "bold" }}
+                    >
+                      {descriptionData["Date"] || "N/A"}
+                    </Descriptions.Item>
+                    <Descriptions.Item
+                      label={"Total Victims"}
+                      span={8}
+                      labelStyle={{ fontWeight: "bold" }}
+                    >
+                      {descriptionData["Total Victims"] || "N/A"}
+                    </Descriptions.Item>
+                    <Descriptions.Item
+                      label={"Fatalities"}
+                      span={8}
+                      labelStyle={{ fontWeight: "bold" }}
+                    >
+                      {descriptionData["Fatalities"] || "N/A"}
+                    </Descriptions.Item>
+                    <Descriptions.Item
+                      label={"Injuries"}
+                      span={8}
+                      labelStyle={{ fontWeight: "bold" }}
+                    >
+                      {descriptionData["Injuries"] || "N/A"}
+                    </Descriptions.Item>
+                    <Descriptions.Item
+                      label={"Shooter's Age"}
+                      span={8}
+                      labelStyle={{ fontWeight: "bold" }}
+                    >
+                      {descriptionData["Age"] || "N/A"}
+                    </Descriptions.Item>
+                    <Descriptions.Item
+                      label={"Gender"}
+                      span={8}
+                      labelStyle={{ fontWeight: "bold" }}
+                    >
+                      {descriptionData["Gender"] || "N/A"}
+                    </Descriptions.Item>
+                    <Descriptions.Item
+                      label={"Race"}
+                      span={8}
+                      labelStyle={{ fontWeight: "bold" }}
+                    >
+                      {descriptionData["Race"] || "N/A"}
+                    </Descriptions.Item>
+                    <Descriptions.Item
+                      label={"Weapon(s)"}
+                      span={24}
+                      labelStyle={{ fontWeight: "bold" }}
+                    >
+                      {descriptionData["weapon_details"] || "N/A"}
+                    </Descriptions.Item>
+                    <Descriptions.Item
+                      label={"Summary"}
+                      span={24}
+                      labelStyle={{ fontWeight: "bold" }}
+                    >
+                      {descriptionData["summary"] || "N/A"}
+                    </Descriptions.Item>
+                  </Descriptions>
+                  <Button onClick={clearDescription}> Clear </Button>
+                </Space>
+              ) : (
+                <Empty style={{ marginTop: "5em", marginBottom: "5em" }}>
+                  <span>Click a dot to show details.</span>
+                </Empty>
               )}
-              style={{ width: "80%", marginLeft: "10%" }}
-              onChange={(v) => {
-                setXSel(v);
-              }}
-            ></Slider>
-          </Col>
-          <Col span={12}>
-            <p> Y Axis: </p>
-            <Select
-              options={axisContent}
-              defaultValue={axisContent[1].value}
-              style={{ width: "100%" }}
-              onChange={(v) => {
-                setYAxis(v);
-              }}
-            ></Select>
-            <Slider
-              id={"ySlider"}
-              range
-              step={1}
-              min={yRange[0]}
-              max={yRange[1]}
-              marks={Object.assign(
-                {},
-                ...yRange.map((key) => ({ [key]: key.toString() }))
-              )}
-              value={ySel}
-              style={{ width: "80%", marginLeft: "10%" }}
-              onChange={(v) => {
-                setYSel(v);
-              }}
-            ></Slider>
-          </Col>
-        </Row>
-        <Row justify={"start"}>
-          <Col span={24}>
-            {descriptionData !== null ? (
-              <Space direction={"vertical"}>
-                <Descriptions
-                  title={"Details"}
-                  column={24}
-                  style={{ width: "100%" }}
-                  bordered
-                  size={"small"}
-                >
-                  <Descriptions.Item
-                    label={"Case"}
-                    span={24}
-                    labelStyle={{ fontWeight: "bold" }}
-                  >
-                    {descriptionData["Case"]}
-                  </Descriptions.Item>
-                  <Descriptions.Item
-                    label={"Location"}
-                    span={12}
-                    labelStyle={{ fontWeight: "bold" }}
-                  >
-                    {descriptionData["Location"] || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item
-                    label={"Date"}
-                    span={12}
-                    labelStyle={{ fontWeight: "bold" }}
-                  >
-                    {descriptionData["Date"] || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item
-                    label={"Total Victims"}
-                    span={8}
-                    labelStyle={{ fontWeight: "bold" }}
-                  >
-                    {descriptionData["Total Victims"] || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item
-                    label={"Fatalities"}
-                    span={8}
-                    labelStyle={{ fontWeight: "bold" }}
-                  >
-                    {descriptionData["Fatalities"] || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item
-                    label={"Injuries"}
-                    span={8}
-                    labelStyle={{ fontWeight: "bold" }}
-                  >
-                    {descriptionData["Injuries"] || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item
-                    label={"Shooter's Age"}
-                    span={8}
-                    labelStyle={{ fontWeight: "bold" }}
-                  >
-                    {descriptionData["Age"] || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item
-                    label={"Gender"}
-                    span={8}
-                    labelStyle={{ fontWeight: "bold" }}
-                  >
-                    {descriptionData["Gender"] || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item
-                    label={"Race"}
-                    span={8}
-                    labelStyle={{ fontWeight: "bold" }}
-                  >
-                    {descriptionData["Race"] || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item
-                    label={"Weapon(s)"}
-                    span={24}
-                    labelStyle={{ fontWeight: "bold" }}
-                  >
-                    {descriptionData["weapon_details"] || "N/A"}
-                  </Descriptions.Item>
-                  <Descriptions.Item
-                    label={"Summary"}
-                    span={24}
-                    labelStyle={{ fontWeight: "bold" }}
-                  >
-                    {descriptionData["summary"] || "N/A"}
-                  </Descriptions.Item>
-                </Descriptions>
-                <Button onClick={clearDescription}> Clear </Button>
-              </Space>
-            ) : (
-              <Empty style={{ marginTop: "5em", marginBottom: "5em" }}>
-                <span>Click a dot to show details.</span>
-              </Empty>
-            )}
-          </Col>
-        </Row>
-      </Col>
-    </Row>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+      {renderTable()}
+    </>
   );
 }

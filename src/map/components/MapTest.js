@@ -15,7 +15,7 @@ import { formatDetails } from "../helpers/formatDetails";
 
 const UsMap = ({ mapData }) => {
   const svgRef = useRef();
-  const projRef = useRef(d3.geoMercator().center([-85.93, 40.72]).scale(700));
+  const projRef = useRef(d3.geoMercator().center([-90.93, 40.72]).scale(700));
   var stateAndCases = new Map();
   const [currentDataset, setCurrentDataset] = useState(dataset);
   var map;
