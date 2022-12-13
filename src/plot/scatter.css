@@ -3,8 +3,21 @@
     opacity: 0.7;
 }
 
+.dot-sel {
+    fill: #b3698d;
+    opacity: 0.7;
+    z-index: 9999;
+}
+
+
 .dot:hover {
     fill: #4c9585;
+    border: gray;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.dot-sel:hover {
     border: gray;
     border-radius: 2px;
     cursor: pointer;

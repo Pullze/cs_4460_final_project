@@ -32,17 +32,10 @@ export default function Scatter(props) {
   }, [yAxisVal]);
 
   useEffect(() => {
-    console.log(xRange);
-    setXSel(xRange);
-  }, [xRange]);
-
-  useEffect(() => {
-    console.log(yRange);
-    setYSel(yRange);
-  }, [yRange]);
-
-  useEffect(() => {
     updateScatter(-1);
+    if (descriptionData !== null) {
+      updateDescription(null, descriptionData);
+    }
   }, [xSel, ySel]);
 
   const axisContent = [
@@ -103,15 +96,6 @@ export default function Scatter(props) {
     let yAxis = chartG.append("g")
       .attr("id", "yAxis");
 
-    let dots = chartG
-      .selectAll(".dot")
-      .data(dataset)
-      .enter()
-      .append("circle")
-      .attr("class", "dot")
-      .attr("cx", (d) => (Math.random() * width))
-      .attr("cy", (d) => (height))
-      .attr("r", 5);
   }
 
   function updateScatter(axis) {
@@ -161,13 +145,23 @@ export default function Scatter(props) {
         .tickFormat((d) => d.toString()));
 
     let dots = chartG
-      .selectAll(".dot")
-      .data(data);
+      .selectAll("circle")
+      .data(data, (d) => (
+        d["Case"]
+          .replace(/\s/g,'')
+          .replace(/\'/g,'')
+          .replace(/\./g,'')
+          .replace(/[0-9]/g, '')
+      ));
 
     let dotsEnter = dots
       .enter()
       .append("circle")
       .attr("class", "dot");
+
+    dotsEnter
+      .attr("cx", (d) => (Math.random() * width))
+      .attr("cy", (d) => (height));
 
     dotsEnter
       .merge(dots)
@@ -178,10 +172,16 @@ export default function Scatter(props) {
       .attr("cx", (d) => (d[xKey] == null ? 0 : x(d[xKey])))
       .attr("cy", (d) => (d[yKey] == null ? 0 : y(d[yKey])))
       .attr("r", 5)
-      .attr("id", (d) => d["Case"].replace(/\s/g,''))
+      .attr("id", (d) => d["Case"]
+        .replace(/\s/g,'')
+        .replace(/\'/g,'')
+        .replace(/\./g,'')
+        .replace(/[0-9]/g, ''))
       .duration(1000);
 
-    dots.exit().remove();
+    setTimeout(() => {
+      dots.exit().remove();
+    }, 1000);
   }
 
   function computeRange(axis) {
@@ -209,8 +209,10 @@ export default function Scatter(props) {
 
     if (axis === 0) {
       setXRange(xRng);
+      setXSel(xRng);
     } else if (axis === 1) {
       setYRange(yRng);
+      setYSel(yRng);
     }
   }
 
@@ -227,13 +229,19 @@ export default function Scatter(props) {
   }
 
   function  updateDescription(e, data) {
-    d3.selectAll(".dot").style("fill", "#69b3a2");
-    d3.select('#' + data["Case"].replace(/\s/g,'')).style("fill", "#b3698d");
+    d3.selectAll("circle")
+      .attr("class", "dot")
+    d3.select('#' + data["Case"]
+        .replace(/\s/g,'')
+        .replace(/\'/g,'')
+        .replace(/\./g,'')
+        .replace(/[0-9]/g, ''))
+      .attr("class", "dot-sel")
     setDescriptionData(data);
   }
 
   function clearDescription() {
-    d3.selectAll(".dot").style("fill", "#69b3a2");
+    d3.selectAll("circle").attr("class", "dot");
     setDescriptionData(null);
   }
 
@@ -247,7 +255,7 @@ export default function Scatter(props) {
       <Col xs={24} sm={24} md={24} lg={10}>
         <Row gutter={8} justify={"center"}>
           <Col span={8}>
-            <p style={{marginLeft: "10%"}}> X Axis: </p>
+            <p> X Axis: </p>
             <Select
               options={axisContent}
               defaultValue={axisContent[0].value}
@@ -267,7 +275,7 @@ export default function Scatter(props) {
             ></Slider>
           </Col>
           <Col span={8}>
-            <p style={{marginLeft: "10%"}}> Y Axis: </p>
+            <p> Y Axis: </p>
             <Select
               options={axisContent}
               defaultValue={axisContent[1].value}

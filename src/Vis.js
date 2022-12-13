@@ -40,7 +40,7 @@ export default function Vis(props) {
   ];
   return (
     <>
-      <Layout>
+      <Layout style={{background: "#fff"}}>
         <Header style={{ color: "white" }}>
           <Link to="/1">Header</Link>
         </Header>
@@ -52,6 +52,7 @@ export default function Vis(props) {
               <MapPage />
               <Table
                 dataSource={dataset}
+                style={{paddingRight:"5%", paddingLeft:"5%"}}
                 rowKey={"Case"}
                 columns={columns}
                 expandable={{
