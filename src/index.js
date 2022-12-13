@@ -2,12 +2,10 @@ import "./index.css";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import Map from "./map/Map";
+import MapPage from "./map/MapPage";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import Vis from "./Vis";
-import Viz1 from "./map/viz1";
-import { geoUS } from "./map/geoUS";
 import reportWebVitals from "./reportWebVitals";
 
 export default function App() {
@@ -15,7 +13,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Vis />}></Route>
-        <Route path="1" element={<Viz1 />} />
+        <Route path="1" element={<MapPage />} />
       </Routes>
     </BrowserRouter>
   );
