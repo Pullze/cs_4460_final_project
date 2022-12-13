@@ -24,9 +24,9 @@ const UsMap = ({ mapData }) => {
     currentDataset.forEach((element) => {
       parseStateData(element);
     });
-    d3.selectAll("path").remove();
+    d3.selectAll(".path").remove();
     renderMap(mapData);
-    d3.selectAll("circle").remove();
+    d3.selectAll(".case").remove();
     renderCircles(currentDataset);
   }, [currentDataset]);
 
