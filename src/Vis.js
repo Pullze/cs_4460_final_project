@@ -51,13 +51,28 @@ export default function Vis(props) {
                 <Title level={1} style={{marginBottom: 0}}> US Mass Shootings, 1982–2022 </Title>
                 <Text italic> Lidan Zheng, Lai Wang </Text>
               </>
+              <>
+                <Paragraph style={{marginTop: "2vh"}}>
+                  Mass shootings are a pervasive and tragic issue in the United States. These incidents,
+                  defined as a shooting in which four or more people are killed or injured, have resulted in hundreds
+                  of fatalities and injuries and have had a devastating impact on communities across the country.
+                  In this project, we visualize the data on mass shootings in the U.S. to better understand the
+                  prevalence and patterns of these incidents and to provide insights on this important issue.
+                </Paragraph>
+                <Paragraph>
+                  Our visualizations provide insights on the frequency and location of mass shootings, as well as
+                  key trends and patterns in mass shootings, such as the high concentration of incidents in certain
+                  states. We provides a scatter plot and a map which is switchable in the tabs below. Both visualization
+                  are interactive.
+                </Paragraph>
+              </>
               <Tabs
                 style={{marginTop: "4vh"}}
                 defaultActiveKey="1"
                 type="card"
                 items={[
                   {
-                    label: "Plot",
+                    label: "Scatter Plot",
                     key: "1",
                     children: <Scatter data={dataset}></Scatter>,
                   },
