@@ -253,8 +253,8 @@ export default function Scatter(props) {
         </div>
       </Col>
       <Col xs={24} sm={24} md={24} lg={10}>
-        <Row gutter={8} justify={"center"}>
-          <Col span={8}>
+        <Row gutter={8} justify={"start"}>
+          <Col span={12}>
             <p> X Axis: </p>
             <Select
               options={axisContent}
@@ -274,7 +274,7 @@ export default function Scatter(props) {
                     }}
             ></Slider>
           </Col>
-          <Col span={8}>
+          <Col span={12}>
             <p> Y Axis: </p>
             <Select
               options={axisContent}
@@ -295,8 +295,8 @@ export default function Scatter(props) {
             ></Slider>
           </Col>
         </Row>
-        <Row justify={"center"}>
-          <Col span={16}>
+        <Row justify={"start"}>
+          <Col span={24}>
             {
               descriptionData !== null ?
                 <>
