@@ -72,7 +72,7 @@ export default function Vis(props) {
                 type="card"
                 items={[
                   {
-                    label: "Plot",
+                    label: "Scatter Plot",
                     key: "1",
                     children: <Scatter data={dataset}></Scatter>,
                   },
