@@ -39,7 +39,7 @@ export default function Vis(props) {
   ];
   return (
     <>
-      <Layout>
+      <Layout style={{background: "#fff"}}>
         <Header style={{ color: "white" }}>
           <Link to="/1">Header</Link>
         </Header>
