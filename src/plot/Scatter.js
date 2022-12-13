@@ -257,7 +257,7 @@ export default function Scatter(props) {
 
   return (
     <>
-      <Row style={{ paddingTop: "5%", paddingBottom: "5%" }}>
+      <Row style={{ paddingTop: "2vh", paddingBottom: "2vh" }}>
         <Col xs={24} sm={24} md={24} lg={14}>
           <div ref={scatterRef} style={{ width: "100%", height: "600px" }}>
             <ToolTip data={tooltipData}></ToolTip>
