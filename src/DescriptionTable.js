@@ -82,7 +82,42 @@ const DescriptionTable = ({ descriptionData, clearDescription }) => {
           span={24}
           labelStyle={{ fontWeight: "bold" }}
         >
+          {descriptionData["weapon"] || "N/A"}
+        </Descriptions.Item>
+        <Descriptions.Item
+          label={"Details"}
+          span={24}
+          labelStyle={{ fontWeight: "bold" }}
+        >
           {descriptionData["weapon_details"] || "N/A"}
+        </Descriptions.Item>
+        <Descriptions.Item
+          label={"Obtained Legally?"}
+          span={12}
+          labelStyle={{ fontWeight: "bold" }}
+        >
+          {descriptionData["weapons_obtained_legally"] || "N/A"}
+        </Descriptions.Item>
+        <Descriptions.Item
+          label={"Where Obtained"}
+          span={12}
+          labelStyle={{ fontWeight: "bold" }}
+        >
+          {descriptionData["where_obtained"] || "N/A"}
+        </Descriptions.Item>
+        <Descriptions.Item
+          label={"Prior Signs Mental Issues"}
+          span={24}
+          labelStyle={{ fontWeight: "bold" }}
+        >
+          {descriptionData["prior_signs_mental_health_issues"] || "N/A"}
+        </Descriptions.Item>
+        <Descriptions.Item
+          label={"Mental Health Details"}
+          span={24}
+          labelStyle={{ fontWeight: "bold" }}
+        >
+          {descriptionData["mental_health_details"] || "N/A"}
         </Descriptions.Item>
         <Descriptions.Item
           label={"Summary"}

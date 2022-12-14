@@ -102,7 +102,42 @@ const CaseTable = ({ dataset }) => {
               span={24}
               labelStyle={{ fontWeight: "bold" }}
             >
+              {record["weapon"] || "N/A"}
+            </Descriptions.Item>
+            <Descriptions.Item
+              label={"Details"}
+              span={24}
+              labelStyle={{ fontWeight: "bold" }}
+            >
               {record["weapon_details"] || "N/A"}
+            </Descriptions.Item>
+            <Descriptions.Item
+              label={"Obtained Legally?"}
+              span={12}
+              labelStyle={{ fontWeight: "bold" }}
+            >
+              {record["weapons_obtained_legally"] || "N/A"}
+            </Descriptions.Item>
+            <Descriptions.Item
+              label={"Where Obtained"}
+              span={12}
+              labelStyle={{ fontWeight: "bold" }}
+            >
+              {record["where_obtained"] || "N/A"}
+            </Descriptions.Item>
+            <Descriptions.Item
+              label={"Prior Signs Mental Issues"}
+              span={8}
+              labelStyle={{ fontWeight: "bold" }}
+            >
+              {record["prior_signs_mental_health_issues"] || "N/A"}
+            </Descriptions.Item>
+            <Descriptions.Item
+              label={"Mental Health Details"}
+              span={16}
+              labelStyle={{ fontWeight: "bold" }}
+            >
+              {record["mental_health_details"] || "N/A"}
             </Descriptions.Item>
             <Descriptions.Item
               label={"Summary"}
