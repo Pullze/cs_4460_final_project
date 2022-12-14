@@ -245,10 +245,11 @@ const UsMap = ({ mapData }) => {
                 style={{
                   display: "flex",
                   flexDirection: "row",
-                  justifyContent: "flex-end",
+                  justifyContent: "space-between"
                 }}
               >
-                <h4>19+</h4>
+                <h4> 0 </h4>
+                <h4 >19+</h4>
               </div>
             </div>
 
