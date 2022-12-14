@@ -1,8 +1,5 @@
 import "./index.css";
 
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-
-import MapPage from "./map/MapPage";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import Vis from "./Vis";
@@ -10,12 +7,7 @@ import reportWebVitals from "./reportWebVitals";
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Vis />}></Route>
-        <Route path="1" element={<MapPage />} />
-      </Routes>
-    </BrowserRouter>
+    <Vis></Vis>
   );
 }
 const root = ReactDOM.createRoot(document.getElementById("root"));
